@@ -1,10 +1,6 @@
 locals {
   timestamp = regex_replace(timestamp(), "[- TZ:]", "")
-}
-
-variable "name" {
-  type    = string
-  default = "tt-api"
+  name = "tt-api"
 }
 
 packer {
@@ -17,9 +13,9 @@ packer {
 }
 
 source "amazon-ebs" "ubuntu" {
-  ami_name = "${var.name}-${local.timestamp}"
+  ami_name = "${local.name}-${local.timestamp}"
   tags = {
-    Application = var.name
+    Application = "${local.name}"
   }
   instance_type = "t2.micro"
   region        = "eu-west-2"
@@ -36,7 +32,7 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-  name = var.name
+  name = "${local.name}"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
