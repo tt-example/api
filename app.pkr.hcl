@@ -19,6 +19,11 @@ source "amazon-ebs" "ubuntu" {
   }
   instance_type = "t2.micro"
   region        = "eu-west-2"
+
+  assume_role {
+    role_arn = "arn:aws:iam::548930680747:role/tt-role"
+    session_name = "packer"
+  }
   source_ami_filter {
     filters = {
       name                = "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*"
