@@ -32,7 +32,7 @@ source "amazon-ebs" "ubuntu" {
 }
 
 build {
-  name = "${local.name}"
+  name = "tt-api"
   sources = [
     "source.amazon-ebs.ubuntu"
   ]
