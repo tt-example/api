@@ -6,54 +6,56 @@ on:
       - master
 
 jobs:
-  packer:
-    name: packer
-    runs-on: ubuntu-latest
+  # packer:
+  #   name: packer
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
 
-      # validate templates
-      - name: Validate Template
-        uses: hashicorp/packer-github-actions@master
-        with:
-          command: validate
-          arguments: -syntax-only
-          target: app.pkr.hcl
+  #     # validate templates
+  #     - name: Validate Template
+  #       uses: hashicorp/packer-github-actions@master
+  #       with:
+  #         command: validate
+  #         arguments: -syntax-only
+  #         target: app.pkr.hcl
 
-      - name: Initialize packer
-        uses: hashicorp/packer-github-actions@master
-        with:
-          command: init
-          target: .
+  #     - name: Initialize packer
+  #       uses: hashicorp/packer-github-actions@master
+  #       with:
+  #         command: init
+  #         target: .
 
-      # build artifact
-      - name: Build Artifact
-        uses: hashicorp/packer-github-actions@master
-        with:
-          command: build
-          arguments: "-color=false -on-error=abort"
-          target: app.pkr.hcl
-        env:
-          PACKER_LOG: 1
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #     # build artifact
+  #     - name: Build Artifact
+  #       uses: hashicorp/packer-github-actions@master
+  #       with:
+  #         command: build
+  #         arguments: "-color=false -on-error=abort"
+  #         target: app.pkr.hcl
+  #       env:
+  #         PACKER_LOG: 1
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   terraform:
-    needs: packer
+    # needs: packer
     name: "Terraform"
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: infrastructure/infra/terraform
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          name: tt-example/infrastructure
+          repository: tt-example/infrastructure
           token: ${{ secrets.GH_PAT }}
           path: infrastructure
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
