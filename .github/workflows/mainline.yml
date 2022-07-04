@@ -22,6 +22,12 @@ jobs:
           arguments: -syntax-only
           target: app.pkr.hcl
 
+      - name: Initialize packer
+        uses: hashicorp/packer-github-actions@master
+        with:
+          command: init
+          target: .
+
       # build artifact
       - name: Build Artifact
         uses: hashicorp/packer-github-actions@master
